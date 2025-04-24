@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: 'segoe ui', sans-serif;
+            background: color(#d6e1f7 red green blue);
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-box{
+            width: 400px;
+            padding: 30px;
+            position: relative;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+        }
+        .label{
+            display: block;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        input[type="email"],
+        input[type="password"]{
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px 0;
+            border: none;
+            border-radius: 5px;
+            border-bottom: 1px solid #ccc;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+        }
+        .forget{
+            position: absolute;
+            text-align: right;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .forget a{
+            text-decoration: none;
+            color: #1a5eff;
+        }
+        .login-btn{
+            width: 100%;
+            background: #1a5eff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .divider{
+            text-align: center;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #999;
+        }
+        .social-btns{
+            display: flex;
+            justify-content: space-between;
+        }
+        .social-btns button{
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 500px;
+            cursor: pointer;
+        }
+        .social-btns button img{
+            background: #1a5eff;
+            color: #fff;
+        }
+        .rigister{
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .rigister a{
+            text-decoration: none;
+            color: #1a5eff;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h3>Login</h3>
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" placeholder ="youremail@example.com">
+            <label type="password" id="password" placeholder="Password">
+                <div class="forget">
+                    <a href="#">Forget Password?</a>
+                </div>
+                <button type="login-btn" onclick="=saveUser()">Account Login</button>
+
+                <div class="divider">OR USE WITH</div>
+                <div class="social-butns">
+                    <button onclick="googleLogin()">Google</button>
+                    <button onclick="facebookLogin()">Facebook</button>
+                </div>
+            </label>
+       </div>
+    </div>
+    
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+        
+        const firebaseConfig = {
+          apiKey: "AIzaSyCEJoPEVNEDGGdV06H0f6TM7RNUUqtMvOI",
+          authDomain: "new-project-ed007.firebaseapp.com",
+          projectId: "new-project-ed007",
+          storageBucket: "new-project-ed007.firebasestorage.app",
+          messagingSenderId: "857085804328",
+          appId: "1:857085804328:web:2a5c312e3ed13aadecda1d",
+          measurementId: "G-737XZRNG2X"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth=getAuth();
+        const provider=new GoogleAuthProvider();
+        const database=getDatabase(app);
+
+        // Email Login
+        window.saveUser=()=>{
+            const email=document.getElementById("email").value
+            const password=document.getElementById("password").value
+            if(!email||!password)
+        {
+            alert("Please fill in all fields");
+            return;
+        }
+        const userId=Data.now();
+        set(ref(database,"users/"+userId),{email:email,password:password})
+        .then(()=>{
+            alert("User saved successfully");
+            document.getElementById("email").value=""
+            document.getElementById("password").value=""
+        })
+        .catch((error)=>{
+            console.error("Error save data: ",error);
+            alert("Failed to save data");
+        })
+        }
+
+
+        // Email send on forget
+        Window.msg=function(){
+            const email=document.getElementById("email").value
+            const password=document.getElementById("password").value
+            error.textContent=''
+            if(!email)
+        {
+            error.textContent="Please enter your email address"
+            return;
+        }
+        const auth=getAuth(app)
+        sendPasswordResetEmail(auth,email)
+        .then(()=>{
+            alert("Password reset email sent successfully")
+        })
+        .catch((error)=>{
+            error.textContent=error.message
+        })
+        }
+
+        // Google Login
+        window.googleLogin=function(){
+            signInWithPopup(auth,provider)
+            .then((result)=>{
+                const userData={
+                    name:user.displayName,
+                    email:user.email,
+                    profilePic:user.photoURL,
+                };
+                localStorage.setItem('googleUser',JSON.stringify(userData))
+                // saving data to database
+                window.location.href="dashboard.html"
+            })
+        }
+    </script>
+</body>
+</html>
